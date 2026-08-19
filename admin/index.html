@@ -1,343 +1,2017 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OptiForge — Consolă Admin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: #15130F;
-    --bg-panel: #201D17;
-    --bg-panel-raised: #26221A;
-    --steel: #39352A;
-    --steel-light: #4A4536;
-    --text: #EDE6D6;
-    --text-muted: #8C8573;
-    --forge: #FF5A1F;
-    --forge-dim: #B8431A;
-    --spark: #4FC3F7;
-    --danger: #E5484D;
-    --font-display: 'Oswald', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --font-mono: 'IBM Plex Mono', monospace;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background: radial-gradient(ellipse at top, #1c1912 0%, var(--bg) 55%);
-    color: var(--text);
-    font-family: var(--font-body);
-    min-height: 100vh;
-    padding: 40px 24px 80px;
-  }
-  .wrap{ max-width: 1080px; margin: 0 auto; }
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-  header.top{
-    display:flex; align-items:baseline; justify-content:space-between;
-    margin-bottom: 36px; flex-wrap: wrap; gap: 12px;
-  }
-  .brand{ display:flex; align-items:baseline; gap:14px; }
-  .brand h1{
-    font-family: var(--font-display); font-weight:700; letter-spacing: 0.5px;
-    font-size: 30px; text-transform: uppercase;
-    background: linear-gradient(90deg, var(--text) 0%, var(--forge) 140%);
-    -webkit-background-clip: text; background-clip:text; color:transparent;
-  }
-  .brand .tag{ font-family: var(--font-mono); font-size:12px; color:var(--text-muted); border:1px solid var(--steel); padding:3px 8px; border-radius:3px;}
-  header.top .logout{ font-family: var(--font-mono); font-size:12px; color: var(--text-muted); background:none; border:1px solid var(--steel); padding:8px 14px; border-radius:4px; cursor:pointer; }
-  header.top .logout:hover{ border-color: var(--danger); color: var(--danger); }
+    <title>OptiForge — Consolă Admin</title>
 
-  /* ---------- LOGIN ---------- */
-  #login-screen{
-    max-width: 380px; margin: 12vh auto; text-align:center;
-  }
-  #login-screen h1{
-    font-family: var(--font-display); text-transform: uppercase; font-size: 34px; font-weight:700;
-    letter-spacing: 1px; margin-bottom: 6px;
-  }
-  #login-screen .sub{ color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
-  .field{ text-align:left; margin-bottom: 16px; }
-  .field label{ display:block; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px; }
-  input, select{
-    width:100%; background: var(--bg-panel-raised); border: 1px solid var(--steel); color: var(--text);
-    padding: 11px 12px; border-radius: 5px; font-family: var(--font-mono); font-size: 14px;
-    outline: none; transition: border-color .15s;
-  }
-  input:focus, select:focus{ border-color: var(--forge); }
-  .btn{
-    font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; font-weight:600;
-    font-size: 14px; border: none; border-radius: 5px; padding: 12px 20px; cursor:pointer;
-    transition: transform .1s, box-shadow .15s; width: 100%;
-  }
-  .btn-forge{ background: linear-gradient(90deg, var(--forge-dim), var(--forge)); color: #1a0e06; }
-  .btn-forge:hover{ box-shadow: 0 0 0 1px var(--forge), 0 6px 20px -6px var(--forge); transform: translateY(-1px); }
-  .btn-ghost{ background: transparent; border:1px solid var(--steel); color: var(--text); width:auto; padding:9px 16px; font-size:12px;}
-  .btn-ghost:hover{ border-color: var(--spark); color: var(--spark);}
-  #login-error{ color: var(--danger); font-size: 13px; margin-top: 12px; font-family: var(--font-mono); min-height: 18px;}
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
-  /* ---------- DASHBOARD ---------- */
-  #dashboard{ display:none; }
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
 
-  .stats-row{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
-  .stat{
-    background: var(--bg-panel); border: 1px solid var(--steel); border-radius: 8px; padding: 18px 20px;
-    position:relative; overflow:hidden;
-  }
-  .stat::before{
-    content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--forge);
-    opacity:.7;
-  }
-  .stat .num{ font-family: var(--font-display); font-size: 32px; font-weight:600; }
-  .stat .lbl{ font-family: var(--font-mono); font-size: 11px; text-transform:uppercase; color: var(--text-muted); letter-spacing:.06em; margin-top:2px;}
+    <style>
 
-  .panel{
-    background: var(--bg-panel); border: 1px solid var(--steel); border-radius: 10px;
-    padding: 24px; margin-bottom: 24px;
-  }
-  .panel h2{
-    font-family: var(--font-display); text-transform: uppercase; font-size: 18px; letter-spacing:.04em;
-    margin-bottom: 18px; display:flex; align-items:center; gap:10px;
-  }
-  .panel h2 .dot{ width:8px; height:8px; border-radius:50%; background: var(--forge); box-shadow: 0 0 8px var(--forge); }
+        :root {
+            --bg: #15130F;
+            --bg-panel: #201D17;
+            --bg-panel-raised: #26221A;
+            --steel: #39352A;
+            --steel-light: #4A4536;
+            --text: #EDE6D6;
+            --text-muted: #8C8573;
+            --forge: #FF5A1F;
+            --forge-dim: #B8431A;
+            --spark: #4FC3F7;
+            --danger: #E5484D;
+            --ultimate: #C084FC;
 
-  .form-row{ display:grid; grid-template-columns: 1.2fr 1fr 1fr 2fr auto; gap: 12px; align-items: end; }
-  .form-row .btn{ width:auto; padding: 11px 22px; }
+            --font-display: 'Oswald', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+        }
 
-  #generated-box{
-    margin-top: 16px; background: var(--bg-panel-raised); border: 1px dashed var(--steel-light);
-    border-radius: 6px; padding: 14px; display:none; font-family: var(--font-mono); font-size: 13px;
-    color: var(--spark); max-height: 180px; overflow-y:auto; line-height:1.9;
-  }
 
-  table{ width:100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px;}
-  thead th{
-    text-align:left; color: var(--text-muted); text-transform: uppercase; font-size:11px;
-    letter-spacing:.06em; padding: 8px 10px; border-bottom: 1px solid var(--steel);
-  }
-  tbody td{ padding: 10px; border-bottom: 1px solid #2a2620; vertical-align: middle;}
-  tbody tr:hover{ background: rgba(255,90,31,0.04); }
-  .pill{ display:inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; text-transform: uppercase; letter-spacing:.04em; border:1px solid;}
-  .pill.active{ color: var(--spark); border-color: var(--spark); }
-  .pill.revoked{ color: var(--danger); border-color: var(--danger); }
-  .pill.tier-pro{ color: var(--forge); border-color: var(--forge); }
-  .pill.tier-standard{ color: var(--text-muted); border-color: var(--steel-light); }
-  .row-actions button{
-    background:none; border:1px solid var(--steel); color: var(--text-muted); font-family: var(--font-mono);
-    font-size: 11px; padding: 5px 9px; border-radius: 4px; cursor:pointer; margin-right:6px;
-  }
-  .row-actions button:hover{ border-color: var(--spark); color: var(--spark); }
-  .row-actions button.danger:hover{ border-color: var(--danger); color: var(--danger); }
-  .filters{ display:flex; gap:10px; margin-bottom: 14px; }
-  .filters select{ width:auto; padding: 7px 10px; font-size:12px; }
-  .empty-state{ text-align:center; padding: 40px 0; color: var(--text-muted); font-family: var(--font-mono); font-size:13px;}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  @media (max-width: 800px){
-    .stats-row{ grid-template-columns: repeat(2,1fr); }
-    .form-row{ grid-template-columns: 1fr; }
-  }
-</style>
+
+        body {
+            background:
+                radial-gradient(
+                    ellipse at top,
+                    #1c1912 0%,
+                    var(--bg) 55%
+                );
+
+            color: var(--text);
+
+            font-family:
+                var(--font-body);
+
+            min-height: 100vh;
+
+            padding:
+                40px 24px 80px;
+        }
+
+
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+
+        header.top {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+
+            margin-bottom: 36px;
+
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+
+
+        .brand h1 {
+            font-family:
+                var(--font-display);
+
+            font-weight: 700;
+
+            letter-spacing:
+                0.5px;
+
+            font-size: 30px;
+
+            text-transform:
+                uppercase;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--text) 0%,
+                    var(--forge) 140%
+                );
+
+            -webkit-background-clip:
+                text;
+
+            background-clip:
+                text;
+
+            color:
+                transparent;
+        }
+
+
+        .brand .tag {
+            font-family:
+                var(--font-mono);
+
+            font-size: 12px;
+
+            color:
+                var(--text-muted);
+
+            border:
+                1px solid var(--steel);
+
+            padding:
+                3px 8px;
+
+            border-radius:
+                3px;
+        }
+
+
+        header.top .logout {
+            font-family:
+                var(--font-mono);
+
+            font-size: 12px;
+
+            color:
+                var(--text-muted);
+
+            background:
+                none;
+
+            border:
+                1px solid var(--steel);
+
+            padding:
+                8px 14px;
+
+            border-radius:
+                4px;
+
+            cursor:
+                pointer;
+        }
+
+
+        header.top .logout:hover {
+            border-color:
+                var(--danger);
+
+            color:
+                var(--danger);
+        }
+
+
+        /* =====================================================
+           LOGIN
+           ===================================================== */
+
+        #login-screen {
+            max-width:
+                380px;
+
+            margin:
+                12vh auto;
+
+            text-align:
+                center;
+        }
+
+
+        #login-screen h1 {
+            font-family:
+                var(--font-display);
+
+            text-transform:
+                uppercase;
+
+            font-size:
+                34px;
+
+            font-weight:
+                700;
+
+            letter-spacing:
+                1px;
+
+            margin-bottom:
+                6px;
+        }
+
+
+        #login-screen .sub {
+            color:
+                var(--text-muted);
+
+            font-size:
+                14px;
+
+            margin-bottom:
+                32px;
+        }
+
+
+        .field {
+            text-align:
+                left;
+
+            margin-bottom:
+                16px;
+        }
+
+
+        .field label {
+            display:
+                block;
+
+            font-family:
+                var(--font-mono);
+
+            font-size:
+                11px;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.08em;
+
+            color:
+                var(--text-muted);
+
+            margin-bottom:
+                6px;
+        }
+
+
+        input,
+        select {
+            width:
+                100%;
+
+            background:
+                var(--bg-panel-raised);
+
+            border:
+                1px solid var(--steel);
+
+            color:
+                var(--text);
+
+            padding:
+                11px 12px;
+
+            border-radius:
+                5px;
+
+            font-family:
+                var(--font-mono);
+
+            font-size:
+                14px;
+
+            outline:
+                none;
+
+            transition:
+                border-color .15s;
+        }
+
+
+        input:focus,
+        select:focus {
+            border-color:
+                var(--forge);
+        }
+
+
+        .btn {
+            font-family:
+                var(--font-display);
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.06em;
+
+            font-weight:
+                600;
+
+            font-size:
+                14px;
+
+            border:
+                none;
+
+            border-radius:
+                5px;
+
+            padding:
+                12px 20px;
+
+            cursor:
+                pointer;
+
+            transition:
+                transform .1s,
+                box-shadow .15s;
+
+            width:
+                100%;
+        }
+
+
+        .btn-forge {
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--forge-dim),
+                    var(--forge)
+                );
+
+            color:
+                #1a0e06;
+        }
+
+
+        .btn-forge:hover {
+            box-shadow:
+                0 0 0 1px var(--forge),
+                0 6px 20px -6px var(--forge);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .btn-ghost {
+            background:
+                transparent;
+
+            border:
+                1px solid var(--steel);
+
+            color:
+                var(--text);
+
+            width:
+                auto;
+
+            padding:
+                9px 16px;
+
+            font-size:
+                12px;
+        }
+
+
+        .btn-ghost:hover {
+            border-color:
+                var(--spark);
+
+            color:
+                var(--spark);
+        }
+
+
+        #login-error {
+            color:
+                var(--danger);
+
+            font-size:
+                13px;
+
+            margin-top:
+                12px;
+
+            font-family:
+                var(--font-mono);
+
+            min-height:
+                18px;
+        }
+
+
+        /* =====================================================
+           DASHBOARD
+           ===================================================== */
+
+        #dashboard {
+            display:
+                none;
+        }
+
+
+        .stats-row {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap:
+                14px;
+
+            margin-bottom:
+                32px;
+        }
+
+
+        .stat {
+            background:
+                var(--bg-panel);
+
+            border:
+                1px solid var(--steel);
+
+            border-radius:
+                8px;
+
+            padding:
+                18px 20px;
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+        }
+
+
+        .stat::before {
+            content:
+                '';
+
+            position:
+                absolute;
+
+            left:
+                0;
+
+            top:
+                0;
+
+            bottom:
+                0;
+
+            width:
+                3px;
+
+            background:
+                var(--forge);
+
+            opacity:
+                .7;
+        }
+
+
+        .stat .num {
+            font-family:
+                var(--font-display);
+
+            font-size:
+                32px;
+
+            font-weight:
+                600;
+        }
+
+
+        .stat .lbl {
+            font-family:
+                var(--font-mono);
+
+            font-size:
+                11px;
+
+            text-transform:
+                uppercase;
+
+            color:
+                var(--text-muted);
+
+            letter-spacing:
+                .06em;
+
+            margin-top:
+                2px;
+        }
+
+
+        .panel {
+            background:
+                var(--bg-panel);
+
+            border:
+                1px solid var(--steel);
+
+            border-radius:
+                10px;
+
+            padding:
+                24px;
+
+            margin-bottom:
+                24px;
+        }
+
+
+        .panel h2 {
+            font-family:
+                var(--font-display);
+
+            text-transform:
+                uppercase;
+
+            font-size:
+                18px;
+
+            letter-spacing:
+                .04em;
+
+            margin-bottom:
+                18px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+        }
+
+
+        .panel h2 .dot {
+            width:
+                8px;
+
+            height:
+                8px;
+
+            border-radius:
+                50%;
+
+            background:
+                var(--forge);
+
+            box-shadow:
+                0 0 8px var(--forge);
+        }
+
+
+        .form-row {
+            display:
+                grid;
+
+            grid-template-columns:
+                1.4fr 1fr 1fr 2fr auto;
+
+            gap:
+                12px;
+
+            align-items:
+                end;
+        }
+
+
+        .form-row .btn {
+            width:
+                auto;
+
+            padding:
+                11px 22px;
+        }
+
+
+        #generated-box {
+            margin-top:
+                16px;
+
+            background:
+                var(--bg-panel-raised);
+
+            border:
+                1px dashed var(--steel-light);
+
+            border-radius:
+                6px;
+
+            padding:
+                14px;
+
+            display:
+                none;
+
+            font-family:
+                var(--font-mono);
+
+            font-size:
+                13px;
+
+            color:
+                var(--spark);
+
+            max-height:
+                180px;
+
+            overflow-y:
+                auto;
+
+            line-height:
+                1.9;
+        }
+
+
+        /* =====================================================
+           TABLE
+           ===================================================== */
+
+        table {
+            width:
+                100%;
+
+            border-collapse:
+                collapse;
+
+            font-family:
+                var(--font-mono);
+
+            font-size:
+                13px;
+        }
+
+
+        thead th {
+            text-align:
+                left;
+
+            color:
+                var(--text-muted);
+
+            text-transform:
+                uppercase;
+
+            font-size:
+                11px;
+
+            letter-spacing:
+                .06em;
+
+            padding:
+                8px 10px;
+
+            border-bottom:
+                1px solid var(--steel);
+        }
+
+
+        tbody td {
+            padding:
+                10px;
+
+            border-bottom:
+                1px solid #2a2620;
+
+            vertical-align:
+                middle;
+        }
+
+
+        tbody tr:hover {
+            background:
+                rgba(
+                    255,
+                    90,
+                    31,
+                    0.04
+                );
+        }
+
+
+        .pill {
+            display:
+                inline-block;
+
+            padding:
+                3px 10px;
+
+            border-radius:
+                20px;
+
+            font-size:
+                11px;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .04em;
+
+            border:
+                1px solid;
+        }
+
+
+        .pill.active {
+            color:
+                var(--spark);
+
+            border-color:
+                var(--spark);
+        }
+
+
+        .pill.revoked {
+            color:
+                var(--danger);
+
+            border-color:
+                var(--danger);
+        }
+
+
+        .pill.tier-pro {
+            color:
+                var(--forge);
+
+            border-color:
+                var(--forge);
+        }
+
+
+        .pill.tier-standard {
+            color:
+                var(--text-muted);
+
+            border-color:
+                var(--steel-light);
+        }
+
+
+        .pill.tier-ultimate {
+            color:
+                var(--ultimate);
+
+            border-color:
+                var(--ultimate);
+
+            box-shadow:
+                0 0 8px rgba(
+                    192,
+                    132,
+                    252,
+                    .15
+                );
+        }
+
+
+        .row-actions button {
+            background:
+                none;
+
+            border:
+                1px solid var(--steel);
+
+            color:
+                var(--text-muted);
+
+            font-family:
+                var(--font-mono);
+
+            font-size:
+                11px;
+
+            padding:
+                5px 9px;
+
+            border-radius:
+                4px;
+
+            cursor:
+                pointer;
+
+            margin-right:
+                6px;
+        }
+
+
+        .row-actions button:hover {
+            border-color:
+                var(--spark);
+
+            color:
+                var(--spark);
+        }
+
+
+        .row-actions button.danger:hover {
+            border-color:
+                var(--danger);
+
+            color:
+                var(--danger);
+        }
+
+
+        .filters {
+            display:
+                flex;
+
+            gap:
+                10px;
+
+            margin-bottom:
+                14px;
+
+            flex-wrap:
+                wrap;
+        }
+
+
+        .filters select {
+            width:
+                auto;
+
+            padding:
+                7px 10px;
+
+            font-size:
+                12px;
+        }
+
+
+        .empty-state {
+            text-align:
+                center;
+
+            padding:
+                40px 0;
+
+            color:
+                var(--text-muted);
+
+            font-family:
+                var(--font-mono);
+
+            font-size:
+                13px;
+        }
+
+
+        @media (max-width: 800px) {
+
+            .stats-row {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .form-row .btn {
+                width:
+                    100%;
+            }
+        }
+
+    </style>
 </head>
+
+
 <body>
 
+
 <div id="login-screen">
-  <h1>OptiForge</h1>
-  <div class="sub">Consolă administrator — acces licențe</div>
-  <div class="field">
-    <label>Parolă admin</label>
-    <input type="password" id="admin-password" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
-  </div>
-  <button class="btn btn-forge" onclick="doLogin()">Autentificare</button>
-  <div id="login-error"></div>
+
+    <h1>
+        OptiForge
+    </h1>
+
+
+    <div class="sub">
+        Consolă administrator — acces licențe
+    </div>
+
+
+    <div class="field">
+
+        <label>
+            Parolă admin
+        </label>
+
+
+        <input
+            type="password"
+            id="admin-password"
+            placeholder="••••••••"
+            onkeydown="if(event.key==='Enter') doLogin()"
+        >
+
+    </div>
+
+
+    <button
+        class="btn btn-forge"
+        onclick="doLogin()">
+
+        Autentificare
+
+    </button>
+
+
+    <div id="login-error"></div>
+
 </div>
 
-<div class="wrap" id="dashboard">
-  <header class="top">
-    <div class="brand">
-      <h1>OptiForge</h1>
-      <span class="tag">consolă admin</span>
-    </div>
-    <button class="logout" onclick="doLogout()">Deconectare</button>
-  </header>
 
-  <div class="stats-row" id="stats-row"></div>
+<div
+    class="wrap"
+    id="dashboard">
 
-  <div class="panel">
-    <h2><span class="dot"></span>Generează chei noi</h2>
-    <div class="form-row">
-      <div class="field" style="margin:0;">
-        <label>Nivel licență</label>
-        <select id="gen-tier">
-          <option value="standard">Standard (2 optimizări)</option>
-          <option value="pro">Pro (4 optimizări)</option>
-        </select>
-      </div>
-      <div class="field" style="margin:0;">
-        <label>Cantitate</label>
-        <input type="number" id="gen-quantity" value="1" min="1" max="200">
-      </div>
-      <div class="field" style="margin:0;">
-        <label>Valabilitate (zile)</label>
-        <input type="number" id="gen-days" placeholder="fără expirare" min="1">
-      </div>
-      <div class="field" style="margin:0;">
-        <label>Notă (opțional)</label>
-        <input type="text" id="gen-note" placeholder="ex: client Discord #1234">
-      </div>
-      <button class="btn btn-forge" onclick="generateKeys()">Forjează chei</button>
-    </div>
-    <div id="generated-box"></div>
-  </div>
 
-  <div class="panel">
-    <h2><span class="dot"></span>Chei existente</h2>
-    <div class="filters">
-      <select id="filter-status" onchange="loadKeys()">
-        <option value="">Toate stările</option>
-        <option value="active">Active</option>
-        <option value="revoked">Revocate</option>
-      </select>
-      <select id="filter-tier" onchange="loadKeys()">
-        <option value="">Toate nivelurile</option>
-        <option value="standard">Standard</option>
-        <option value="pro">Pro</option>
-      </select>
-      <button class="btn-ghost" style="width:auto;" onclick="loadKeys()">Reîmprospătează</button>
+    <header class="top">
+
+        <div class="brand">
+
+            <h1>
+                OptiForge
+            </h1>
+
+
+            <span class="tag">
+                consolă admin
+            </span>
+
+        </div>
+
+
+        <button
+            class="logout"
+            onclick="doLogout()">
+
+            Deconectare
+
+        </button>
+
+    </header>
+
+
+    <div
+        class="stats-row"
+        id="stats-row">
     </div>
-    <div style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr>
-            <th>Cheie</th><th>Nivel</th><th>Stare</th><th>Activată</th><th>Expiră</th><th>Notă</th><th>Acțiuni</th>
-          </tr>
-        </thead>
-        <tbody id="keys-tbody"></tbody>
-      </table>
-      <div class="empty-state" id="empty-state" style="display:none;">Nicio cheie găsită.</div>
+
+
+    <!-- =====================================================
+         GENERATE
+         ===================================================== -->
+
+    <div class="panel">
+
+        <h2>
+
+            <span class="dot"></span>
+
+            Generează chei noi
+
+        </h2>
+
+
+        <div class="form-row">
+
+
+            <div
+                class="field"
+                style="margin:0;">
+
+                <label>
+                    Nivel licență
+                </label>
+
+
+                <select id="gen-tier">
+
+                    <option value="standard">
+                        Standard (2 optimizări)
+                    </option>
+
+                    <option value="pro">
+                        Pro (4 optimizări)
+                    </option>
+
+                    <option value="ultimate">
+                        Ultimate (9 optimizări)
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div
+                class="field"
+                style="margin:0;">
+
+                <label>
+                    Cantitate
+                </label>
+
+
+                <input
+                    type="number"
+                    id="gen-quantity"
+                    value="1"
+                    min="1"
+                    max="200"
+                >
+
+            </div>
+
+
+            <div
+                class="field"
+                style="margin:0;">
+
+                <label>
+                    Valabilitate (zile)
+                </label>
+
+
+                <input
+                    type="number"
+                    id="gen-days"
+                    placeholder="fără expirare"
+                    min="1"
+                >
+
+            </div>
+
+
+            <div
+                class="field"
+                style="margin:0;">
+
+                <label>
+                    Notă (opțional)
+                </label>
+
+
+                <input
+                    type="text"
+                    id="gen-note"
+                    placeholder="ex: client Discord #1234"
+                >
+
+            </div>
+
+
+            <button
+                class="btn btn-forge"
+                onclick="generateKeys()">
+
+                Forjează chei
+
+            </button>
+
+        </div>
+
+
+        <div id="generated-box"></div>
+
     </div>
-  </div>
+
+
+    <!-- =====================================================
+         EXISTING KEYS
+         ===================================================== -->
+
+    <div class="panel">
+
+        <h2>
+
+            <span class="dot"></span>
+
+            Chei existente
+
+        </h2>
+
+
+        <div class="filters">
+
+
+            <select
+                id="filter-status"
+                onchange="loadKeys()">
+
+                <option value="">
+                    Toate stările
+                </option>
+
+                <option value="active">
+                    Active
+                </option>
+
+                <option value="revoked">
+                    Revocate
+                </option>
+
+            </select>
+
+
+            <select
+                id="filter-tier"
+                onchange="loadKeys()">
+
+                <option value="">
+                    Toate nivelurile
+                </option>
+
+                <option value="standard">
+                    Standard
+                </option>
+
+                <option value="pro">
+                    Pro
+                </option>
+
+                <option value="ultimate">
+                    Ultimate
+                </option>
+
+            </select>
+
+
+            <button
+                class="btn-ghost"
+                style="width:auto;"
+                onclick="loadKeys()">
+
+                Reîmprospătează
+
+            </button>
+
+        </div>
+
+
+        <div style="overflow-x:auto;">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Cheie
+                        </th>
+
+                        <th>
+                            Nivel
+                        </th>
+
+                        <th>
+                            Stare
+                        </th>
+
+                        <th>
+                            Activată
+                        </th>
+
+                        <th>
+                            Expiră
+                        </th>
+
+                        <th>
+                            Notă
+                        </th>
+
+                        <th>
+                            Acțiuni
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="keys-tbody"></tbody>
+
+            </table>
+
+
+            <div
+                class="empty-state"
+                id="empty-state"
+                style="display:none;">
+
+                Nicio cheie găsită.
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+
 
 <script>
-let ADMIN_TOKEN = sessionStorage.getItem('of_token') || null;
 
-function api(path, opts={}){
-  opts.headers = opts.headers || {};
-  opts.headers['Content-Type'] = 'application/json';
-  if (ADMIN_TOKEN) opts.headers['X-Admin-Token'] = ADMIN_TOKEN;
-  return fetch(path, opts).then(async r => {
-    const data = await r.json().catch(()=>({}));
-    if (!r.ok) throw new Error(data.error || 'Eroare server');
-    return data;
-  });
+let ADMIN_TOKEN =
+    sessionStorage.getItem(
+        'of_token'
+    ) || null;
+
+
+// ============================================================
+// API
+// ============================================================
+
+function api(
+    path,
+    opts = {}
+) {
+
+    opts.headers =
+        opts.headers || {};
+
+
+    opts.headers[
+        'Content-Type'
+    ] =
+        'application/json';
+
+
+    if (ADMIN_TOKEN) {
+
+        opts.headers[
+            'X-Admin-Token'
+        ] =
+            ADMIN_TOKEN;
+    }
+
+
+    return fetch(
+        path,
+        opts
+    ).then(
+        async response => {
+
+            const data =
+                await response.json()
+                    .catch(
+                        () => ({})
+                    );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    'Eroare server'
+                );
+            }
+
+
+            return data;
+        }
+    );
 }
 
-async function doLogin(){
-  const password = document.getElementById('admin-password').value;
-  const errBox = document.getElementById('login-error');
-  errBox.textContent = '';
-  try{
-    const data = await api('/api/admin/login', {method:'POST', body: JSON.stringify({password})});
-    ADMIN_TOKEN = data.token;
-    sessionStorage.setItem('of_token', ADMIN_TOKEN);
-    showDashboard();
-  }catch(e){
-    errBox.textContent = 'Parolă incorectă.';
-  }
+
+// ============================================================
+// LOGIN
+// ============================================================
+
+async function doLogin() {
+
+    const password =
+        document.getElementById(
+            'admin-password'
+        ).value;
+
+
+    const errorBox =
+        document.getElementById(
+            'login-error'
+        );
+
+
+    errorBox.textContent =
+        '';
+
+
+    try {
+
+        const data =
+            await api(
+                '/api/admin/login',
+                {
+                    method: 'POST',
+
+                    body:
+                        JSON.stringify({
+                            password
+                        })
+                }
+            );
+
+
+        ADMIN_TOKEN =
+            data.token;
+
+
+        sessionStorage.setItem(
+            'of_token',
+            ADMIN_TOKEN
+        );
+
+
+        showDashboard();
+
+
+    } catch (error) {
+
+        errorBox.textContent =
+            'Parolă incorectă.';
+    }
 }
 
-function doLogout(){
-  api('/api/admin/logout', {method:'POST'}).catch(()=>{});
-  sessionStorage.removeItem('of_token');
-  ADMIN_TOKEN = null;
-  document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'block';
+
+// ============================================================
+// LOGOUT
+// ============================================================
+
+function doLogout() {
+
+    api(
+        '/api/admin/logout',
+        {
+            method: 'POST'
+        }
+    ).catch(
+        () => {}
+    );
+
+
+    sessionStorage.removeItem(
+        'of_token'
+    );
+
+
+    ADMIN_TOKEN =
+        null;
+
+
+    document.getElementById(
+        'dashboard'
+    ).style.display =
+        'none';
+
+
+    document.getElementById(
+        'login-screen'
+    ).style.display =
+        'block';
 }
 
-function showDashboard(){
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-  loadStats();
-  loadKeys();
-}
 
-async function loadStats(){
-  try{
-    const s = await api('/api/admin/stats');
-    document.getElementById('stats-row').innerHTML = `
-      <div class="stat"><div class="num">${s.total}</div><div class="lbl">Total chei</div></div>
-      <div class="stat"><div class="num">${s.active}</div><div class="lbl">Active</div></div>
-      <div class="stat"><div class="num">${s.activated}</div><div class="lbl">Activate pe device</div></div>
-      <div class="stat"><div class="num">${s.revoked}</div><div class="lbl">Revocate</div></div>
-    `;
-  }catch(e){ if(e.message.includes('Neautorizat')) doLogout(); }
-}
+// ============================================================
+// DASHBOARD
+// ============================================================
 
-async function generateKeys(){
-  const tier = document.getElementById('gen-tier').value;
-  const quantity = document.getElementById('gen-quantity').value;
-  const days_valid = document.getElementById('gen-days').value || null;
-  const note = document.getElementById('gen-note').value;
-  try{
-    const data = await api('/api/admin/keys/generate', {method:'POST', body: JSON.stringify({tier, quantity, days_valid, note})});
-    const box = document.getElementById('generated-box');
-    box.style.display = 'block';
-    box.innerHTML = data.created.map(k => `${k}`).join('<br>');
+function showDashboard() {
+
+    document.getElementById(
+        'login-screen'
+    ).style.display =
+        'none';
+
+
+    document.getElementById(
+        'dashboard'
+    ).style.display =
+        'block';
+
+
     loadStats();
     loadKeys();
-  }catch(e){ alert('Eroare: ' + e.message); }
 }
 
-async function loadKeys(){
-  const status = document.getElementById('filter-status').value;
-  const tier = document.getElementById('filter-tier').value;
-  const params = new URLSearchParams();
-  if (status) params.set('status', status);
-  if (tier) params.set('tier', tier);
-  try{
-    const keys = await api('/api/admin/keys?' + params.toString());
-    const tbody = document.getElementById('keys-tbody');
-    document.getElementById('empty-state').style.display = keys.length ? 'none' : 'block';
-    tbody.innerHTML = keys.map(k => `
-      <tr>
-        <td>${k.license_key}</td>
-        <td><span class="pill tier-${k.tier}">${k.tier}</span></td>
-        <td><span class="pill ${k.status}">${k.status === 'active' ? 'activă' : 'revocată'}</span></td>
-        <td>${k.activated_at ? new Date(k.activated_at).toLocaleDateString('ro-RO') : '—'}</td>
-        <td>${k.expires_at ? new Date(k.expires_at).toLocaleDateString('ro-RO') : 'fără expirare'}</td>
-        <td>${k.note || '—'}</td>
-        <td class="row-actions">
-          ${k.status === 'active'
-            ? `<button class="danger" onclick="revokeKey('${k.license_key}')">Revocă</button>`
-            : `<button onclick="reactivateKey('${k.license_key}')">Reactivează</button>`}
-          <button onclick="resetDevice('${k.license_key}')">Resetează device</button>
-          <button class="danger" onclick="deleteKey('${k.license_key}')">Șterge</button>
-        </td>
-      </tr>
-    `).join('');
-  }catch(e){ if(e.message.includes('Neautorizat')) doLogout(); }
+
+// ============================================================
+// STATS
+// ============================================================
+
+async function loadStats() {
+
+    try {
+
+        const stats =
+            await api(
+                '/api/admin/stats'
+            );
+
+
+        document.getElementById(
+            'stats-row'
+        ).innerHTML = `
+
+            <div class="stat">
+
+                <div class="num">
+                    ${stats.total}
+                </div>
+
+                <div class="lbl">
+                    Total chei
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="num">
+                    ${stats.active}
+                </div>
+
+                <div class="lbl">
+                    Active
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="num">
+                    ${stats.activated}
+                </div>
+
+                <div class="lbl">
+                    Activate pe device
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="num">
+                    ${stats.ultimate}
+                </div>
+
+                <div class="lbl">
+                    Ultimate
+                </div>
+
+            </div>
+
+        `;
+
+
+    } catch (error) {
+
+        if (
+            error.message.includes(
+                'Neautorizat'
+            )
+        ) {
+
+            doLogout();
+        }
+    }
 }
 
-async function revokeKey(key){
-  await api(`/api/admin/keys/${key}/revoke`, {method:'POST'});
-  loadStats(); loadKeys();
-}
-async function reactivateKey(key){
-  await api(`/api/admin/keys/${key}/reactivate`, {method:'POST'});
-  loadStats(); loadKeys();
-}
-async function resetDevice(key){
-  await api(`/api/admin/keys/${key}/reset-device`, {method:'POST'});
-  loadKeys();
-}
-async function deleteKey(key){
-  if (!confirm(`Ștergi definitiv cheia ${key}?`)) return;
-  await api(`/api/admin/keys/${key}`, {method:'DELETE'});
-  loadStats(); loadKeys();
+
+// ============================================================
+// GENERATE KEYS
+// ============================================================
+
+async function generateKeys() {
+
+    const tier =
+        document.getElementById(
+            'gen-tier'
+        ).value;
+
+
+    const quantity =
+        document.getElementById(
+            'gen-quantity'
+        ).value;
+
+
+    const daysValid =
+        document.getElementById(
+            'gen-days'
+        ).value || null;
+
+
+    const note =
+        document.getElementById(
+            'gen-note'
+        ).value;
+
+
+    try {
+
+        const data =
+            await api(
+                '/api/admin/keys/generate',
+                {
+                    method: 'POST',
+
+                    body:
+                        JSON.stringify({
+
+                            tier,
+
+                            quantity,
+
+                            days_valid:
+                                daysValid,
+
+                            note
+                        })
+                }
+            );
+
+
+        const box =
+            document.getElementById(
+                'generated-box'
+            );
+
+
+        box.style.display =
+            'block';
+
+
+        box.innerHTML =
+            data.created
+                .map(
+                    key =>
+                        `
+                        <div>
+                            ${key}
+                        </div>
+                        `
+                )
+                .join('');
+
+
+        loadStats();
+        loadKeys();
+
+
+    } catch (error) {
+
+        alert(
+            'Eroare: ' +
+            error.message
+        );
+    }
 }
 
-// auto-login daca avem deja token in sesiune
-if (ADMIN_TOKEN){ showDashboard(); }
+
+// ============================================================
+// LOAD KEYS
+// ============================================================
+
+async function loadKeys() {
+
+    const status =
+        document.getElementById(
+            'filter-status'
+        ).value;
+
+
+    const tier =
+        document.getElementById(
+            'filter-tier'
+        ).value;
+
+
+    const params =
+        new URLSearchParams();
+
+
+    if (status) {
+
+        params.set(
+            'status',
+            status
+        );
+    }
+
+
+    if (tier) {
+
+        params.set(
+            'tier',
+            tier
+        );
+    }
+
+
+    try {
+
+        const keys =
+            await api(
+                '/api/admin/keys?' +
+                params.toString()
+            );
+
+
+        const tbody =
+            document.getElementById(
+                'keys-tbody'
+            );
+
+
+        document.getElementById(
+            'empty-state'
+        ).style.display =
+            keys.length
+                ? 'none'
+                : 'block';
+
+
+        tbody.innerHTML =
+            keys.map(
+                key => `
+
+                    <tr>
+
+                        <td>
+                            ${escapeHtml(
+                                key.license_key
+                            )}
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="pill tier-${escapeHtml(
+                                    key.tier
+                                )}">
+
+                                ${escapeHtml(
+                                    key.tier
+                                )}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="pill ${escapeHtml(
+                                    key.status
+                                )}">
+
+                                ${
+                                    key.status === 'active'
+                                        ? 'activă'
+                                        : 'revocată'
+                                }
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            ${
+                                key.activated_at
+                                    ? new Date(
+                                        key.activated_at
+                                    ).toLocaleDateString(
+                                        'ro-RO'
+                                    )
+                                    : '—'
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            ${
+                                key.expires_at
+                                    ? new Date(
+                                        key.expires_at
+                                    ).toLocaleDateString(
+                                        'ro-RO'
+                                    )
+                                    : 'fără expirare'
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            ${
+                                key.note
+                                    ? escapeHtml(
+                                        key.note
+                                    )
+                                    : '—'
+                            }
+
+                        </td>
+
+
+                        <td class="row-actions">
+
+                            ${
+                                key.status === 'active'
+
+                                    ? `
+                                        <button
+                                            class="danger"
+                                            onclick="revokeKey('${escapeJs(
+                                                key.license_key
+                                            )}')">
+
+                                            Revocă
+
+                                        </button>
+                                    `
+
+                                    : `
+
+                                        <button
+                                            onclick="reactivateKey('${escapeJs(
+                                                key.license_key
+                                            )}')">
+
+                                            Reactivează
+
+                                        </button>
+
+                                    `
+                            }
+
+
+                            <button
+                                onclick="resetDevice('${escapeJs(
+                                    key.license_key
+                                )}')">
+
+                                Resetează device
+
+                            </button>
+
+
+                            <button
+                                class="danger"
+                                onclick="deleteKey('${escapeJs(
+                                    key.license_key
+                                )}')">
+
+                                Șterge
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `
+            ).join('');
+
+
+    } catch (error) {
+
+        if (
+            error.message.includes(
+                'Neautorizat'
+            )
+        ) {
+
+            doLogout();
+        }
+    }
+}
+
+
+// ============================================================
+// HTML ESCAPE
+// ============================================================
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll(
+            '&',
+            '&amp;'
+        )
+        .replaceAll(
+            '<',
+            '&lt;'
+        )
+        .replaceAll(
+            '>',
+            '&gt;'
+        )
+        .replaceAll(
+            '"',
+            '&quot;'
+        )
+        .replaceAll(
+            "'",
+            '&#039;'
+        );
+}
+
+
+function escapeJs(value) {
+
+    return String(value)
+        .replaceAll(
+            '\\',
+            '\\\\'
+        )
+        .replaceAll(
+            "'",
+            "\\'"
+        );
+}
+
+
+// ============================================================
+// REVOKE
+// ============================================================
+
+async function revokeKey(key) {
+
+    try {
+
+        await api(
+            `/api/admin/keys/${encodeURIComponent(
+                key
+            )}/revoke`,
+            {
+                method: 'POST'
+            }
+        );
+
+
+        loadStats();
+        loadKeys();
+
+    } catch (error) {
+
+        alert(
+            'Eroare: ' +
+            error.message
+        );
+    }
+}
+
+
+// ============================================================
+// REACTIVATE
+// ============================================================
+
+async function reactivateKey(key) {
+
+    try {
+
+        await api(
+            `/api/admin/keys/${encodeURIComponent(
+                key
+            )}/reactivate`,
+            {
+                method: 'POST'
+            }
+        );
+
+
+        loadStats();
+        loadKeys();
+
+    } catch (error) {
+
+        alert(
+            'Eroare: ' +
+            error.message
+        );
+    }
+}
+
+
+// ============================================================
+// RESET DEVICE
+// ============================================================
+
+async function resetDevice(key) {
+
+    try {
+
+        await api(
+            `/api/admin/keys/${encodeURIComponent(
+                key
+            )}/reset-device`,
+            {
+                method: 'POST'
+            }
+        );
+
+
+        loadKeys();
+
+    } catch (error) {
+
+        alert(
+            'Eroare: ' +
+            error.message
+        );
+    }
+}
+
+
+// ============================================================
+// DELETE
+// ============================================================
+
+async function deleteKey(key) {
+
+    if (
+        !confirm(
+            `Ștergi definitiv cheia ${key}?`
+        )
+    ) {
+
+        return;
+    }
+
+
+    try {
+
+        await api(
+            `/api/admin/keys/${encodeURIComponent(
+                key
+            )}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+
+        loadStats();
+        loadKeys();
+
+    } catch (error) {
+
+        alert(
+            'Eroare: ' +
+            error.message
+        );
+    }
+}
+
+
+// ============================================================
+// AUTO LOGIN
+// ============================================================
+
+if (ADMIN_TOKEN) {
+    showDashboard();
+}
+
 </script>
 
 </body>

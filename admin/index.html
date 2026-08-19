@@ -201,6 +201,7 @@
         <option value="">Toate nivelurile</option>
         <option value="standard">Standard</option>
         <option value="pro">Pro</option>
+        <option value="ultimate">Ultimate</option>
       </select>
       <button class="btn-ghost" style="width:auto;" onclick="loadKeys()">Reîmprospătează</button>
     </div>
@@ -268,7 +269,7 @@ async function loadStats(){
       <div class="stat"><div class="num">${s.total}</div><div class="lbl">Total chei</div></div>
       <div class="stat"><div class="num">${s.active}</div><div class="lbl">Active</div></div>
       <div class="stat"><div class="num">${s.activated}</div><div class="lbl">Activate pe device</div></div>
-      <div class="stat"><div class="num">${s.revoked}</div><div class="lbl">Revocate</div></div>
+      <div class="stat"><div class="num">${s.users || 0}</div><div class="lbl">Utilizatori</div></div>
     `;
   }catch(e){ if(e.message.includes('Neautorizat')) doLogout(); }
 }
@@ -330,6 +331,22 @@ async function resetDevice(key){
   await api(`/api/admin/keys/${key}/reset-device`, {method:'POST'});
   loadKeys();
 }
+async function loadUsers(){
+  try{
+    const users = await api('/api/admin/users');
+    document.getElementById('users-tbody').innerHTML = users.map(u => `
+      <tr>
+        <td>${u.username}</td>
+        <td>${u.email}</td>
+        <td>${u.tiers ? u.tiers.split(',').map(t => `<span class="pill tier-${t}">${t}</span>`).join(' ') : '—'}</td>
+        <td>${u.device_count || 0}</td>
+        <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('ro-RO') : '—'}</td>
+        <td>${u.last_login ? new Date(u.last_login).toLocaleString('ro-RO') : '—'}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px;">Niciun utilizator înregistrat.</td></tr>';
+  }catch(e){ if(e.message.includes('Neautorizat')) doLogout(); }
+}
+
 async function deleteKey(key){
   if (!confirm(`Ștergi definitiv cheia ${key}?`)) return;
   await api(`/api/admin/keys/${key}`, {method:'DELETE'});

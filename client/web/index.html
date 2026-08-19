@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptiForge — Premium System Optimizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/app/styles.css">
+</head>
+<body>
+
+<!-- ===================== AUTH SCREEN ===================== -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card glass">
+    <div class="auth-logo">
+      <span class="logo-mark">⚙</span>
+      <h1>OPTIFORGE</h1>
+      <p class="auth-sub">Premium System Optimizer</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">Conectare</button>
+      <button class="auth-tab" data-tab="register">Înregistrare</button>
+    </div>
+    <!-- LOGIN -->
+    <form id="login-form" class="auth-form">
+      <div class="field"><label>Nume utilizator sau email</label><input id="login-identifier" type="text" autocomplete="username"></div>
+      <div class="field"><label>Parolă</label><input id="login-password" type="password" autocomplete="current-password"></div>
+      <button type="submit" class="btn-primary">Conectare</button>
+      <p class="auth-err" id="login-error"></p>
+    </form>
+    <!-- REGISTER -->
+    <form id="register-form" class="auth-form" style="display:none;">
+      <div class="field"><label>Nume utilizator</label><input id="reg-username" type="text" autocomplete="username"></div>
+      <div class="field"><label>Email</label><input id="reg-email" type="email" autocomplete="email"></div>
+      <div class="field"><label>Parolă (min. 6 caractere)</label><input id="reg-password" type="password" autocomplete="new-password"></div>
+      <button type="submit" class="btn-primary">Creează cont</button>
+      <p class="auth-err" id="register-error"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== APP SHELL ===================== -->
+<div id="app-shell" class="app-shell" style="display:none;">
+  <!-- SIDEBAR -->
+  <aside class="sidebar glass">
+    <div class="sidebar-brand">
+      <span class="logo-mark sm">⚙</span>
+      <span class="brand-text">OPTIFORGE</span>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip" id="user-chip"></div>
+      <button class="btn-logout" id="logout-btn">Deconectare</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <header class="topbar glass">
+      <h2 id="page-title">Dashboard</h2>
+      <div class="topbar-right">
+        <span class="plan-badge" id="plan-badge">Fără licență</span>
+      </div>
+    </header>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="/app/app.js"></script>
+</body>
+</html>

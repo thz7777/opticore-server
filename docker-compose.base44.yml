@@ -14,6 +14,5 @@ services:
       - /run/base44/app.env
     command: >
       sh -c "pip install --no-cache-dir -q -r requirements.txt &&
-             python -c 'from app import init_db; init_db()' &&
              flask --app app run --debug --host 0.0.0.0 --port 5000"
     restart: unless-stopped

@@ -10,6 +10,7 @@ const State = {
   catalog: null,
   view: 'dashboard',
   stats: { cpu: 35, ram: 48, gpu: 22, disk: 60, net: 12, temp: 52 },
+  useLocalStats: false,   // true când rulează în desktop (pywebview local server)
 };
 
 // ---- NAV CONFIG ----
@@ -218,19 +219,36 @@ function navigate(view, cat) {
 // LIVE STATS (simulat în browser; pywebview = real via bridge)
 // ============================================================
 let _statsTimer = null;
+async function detectLocalStats() {
+  try {
+    const r = await fetch('/api/local/stats');
+    if (r.ok) { State.useLocalStats = true; }
+  } catch { State.useLocalStats = false; }
+}
 function startLiveStats() {
   if (_statsTimer) return;
-  _statsTimer = setInterval(() => {
+  detectLocalStats();
+  _statsTimer = setInterval(async () => {
+    if (State.useLocalStats) {
+      try {
+        const r = await fetch('/api/local/stats');
+        const d = await r.json();
+        State.stats = { cpu: d.cpu, ram: d.ram, gpu: d.gpu, disk: d.disk, net: d.net, temp: d.temp };
+      } catch { simulateStats(); }
+    } else {
+      simulateStats();
+    }
+    if (State.view === 'dashboard') updateDashboardStats();
+  }, 1500);
+}
+function simulateStats() {
     const s = State.stats;
-    // plimbări realiste, nu pure random
     s.cpu = clamp(s.cpu + rand(-6, 6), 8, 95);
     s.ram = clamp(s.ram + rand(-3, 3), 20, 88);
     s.gpu = clamp(s.gpu + rand(-5, 5), 5, 80);
     s.disk = clamp(s.disk + rand(-1, 1), 35, 85);
     s.net = clamp(s.net + rand(-8, 8), 1, 95);
     s.temp = clamp(s.temp + rand(-2, 2), 40, 75);
-    if (State.view === 'dashboard') updateDashboardStats();
-  }, 1500);
 }
 function stopLiveStats() { clearInterval(_statsTimer); _statsTimer = null; }
 function rand(a, b) { return Math.random() * (b - a) + a; }
@@ -399,9 +417,17 @@ async function runOptimization(key, btn) {
   const orig = btn.textContent;
   btn.textContent = 'Se execută...';
   try {
-    // before/after simulat (în desktop real, valorile vin din sistem)
     const before = snapshot();
-    await new Promise(r => setTimeout(r, 1400));
+    // Execută optimizarea reală pe Windows (dacă rulează în desktop via pywebview);
+    // în web preview doar simulează întârzierea.
+    if (State.useLocalStats) {
+      await fetch('/api/local/run-optimization', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ optimization: key }),
+      });
+    } else {
+      await new Promise(r => setTimeout(r, 1400));
+    }
     const after = snapshot();
     after.cpu = Math.max(5, before.cpu - rand(3, 12));
     after.ram = Math.max(10, before.ram - rand(4, 15));

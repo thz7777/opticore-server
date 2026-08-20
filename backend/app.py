@@ -524,6 +524,8 @@ def ensure_logs_table():
 # Apelam la start
 ensure_logs_table()
 
+# ... (păstrează restul codului așa cum e) ...
+
 if __name__ == "__main__":
     init_db()
-    app.run(host="0.0.0.0", debug=False)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)

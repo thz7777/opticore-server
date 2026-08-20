@@ -1,0 +1,1154 @@
+```html
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiForge</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body data-theme="dark" data-accent="orange">
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">O</div>
+
+            <div>
+                <div class="brand-name">OPTIFORGE</div>
+                <div class="brand-sub">SYSTEM OPTIMIZER</div>
+            </div>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">O</div>
+
+            <div>
+                <div class="profile-name">OptiForge User</div>
+
+                <div
+                    class="profile-plan"
+                    id="profile-plan">
+                    NO LICENSE
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-title">
+            MAIN
+        </div>
+
+        <nav>
+
+            <button class="nav-item active" data-page="dashboard">
+                <span>⌂</span>
+                Dashboard
+            </button>
+
+            <button class="nav-item" data-page="cleaning">
+                <span>✦</span>
+                Cleaning
+            </button>
+
+            <button class="nav-item" data-page="network">
+                <span>◉</span>
+                Network
+            </button>
+
+            <button class="nav-item" data-page="gaming">
+                <span>◈</span>
+                Gaming
+            </button>
+
+            <button class="nav-item" data-page="startup">
+                <span>↗</span>
+                Startup
+            </button>
+
+            <button class="nav-item" data-page="performance">
+                <span>⚡</span>
+                Performance
+            </button>
+
+            <button class="nav-item" data-page="privacy">
+                <span>◉</span>
+                Privacy
+            </button>
+
+        </nav>
+
+        <div class="nav-title">
+            ACCOUNT
+        </div>
+
+        <nav>
+
+            <button class="nav-item" data-page="license">
+                <span>◆</span>
+                License
+            </button>
+
+            <button class="nav-item" data-page="account">
+                <span>●</span>
+                Account
+            </button>
+
+            <button class="nav-item" data-page="settings">
+                <span>⚙</span>
+                Settings
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="system-status">
+                <span class="status-dot"></span>
+                System Ready
+            </div>
+
+            <div class="version">
+                OptiForge v2.0
+            </div>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+
+                <div class="page-label">
+                    OPTIMIZATION CENTER
+                </div>
+
+                <h1 id="page-title">
+                    Dashboard
+                </h1>
+
+            </div>
+
+            <div class="top-actions">
+
+                <div
+                    class="license-badge"
+                    id="license-badge">
+
+                    <span class="status-dot"></span>
+
+                    UNLICENSED
+
+                </div>
+
+                <button
+                    class="icon-button"
+                    id="settings-button"
+                    title="Settings">
+
+                    ⚙
+
+                </button>
+
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <!-- DASHBOARD -->
+
+            <div
+                class="page active"
+                id="page-dashboard">
+
+                <div class="hero">
+
+                    <div>
+
+                        <div class="hero-small">
+                            WELCOME BACK
+                        </div>
+
+                        <h2>
+                            Your PC is ready.
+                        </h2>
+
+                        <p>
+                            Optimize your system with one click and get the
+                            best possible performance.
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        id="optimize-all">
+
+                        ⚡ OPTIMIZE NOW
+
+                    </button>
+
+                </div>
+
+                <div class="stats">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon orange">
+                            ⚡
+                        </div>
+
+                        <div>
+
+                            <div class="stat-title">
+                                Performance
+                            </div>
+
+                            <div class="stat-value">
+                                Ready
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <div class="stat-title">
+                                Network
+                            </div>
+
+                            <div class="stat-value">
+                                Ready
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <div class="stat-title">
+                                Junk Files
+                            </div>
+
+                            <div class="stat-value">
+                                Scan Ready
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ◆
+                        </div>
+
+                        <div>
+
+                            <div class="stat-title">
+                                License
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="dashboard-license-status">
+
+                                NONE
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="section-header">
+
+                    <h3>
+                        Quick Optimization
+                    </h3>
+
+                    <p>
+                        Recommended actions for your system
+                    </p>
+
+                </div>
+
+                <div class="optimization-grid">
+
+                    <div class="optimization-card">
+
+                        <div class="card-top">
+
+                            <div class="card-icon">
+                                ✦
+                            </div>
+
+                            <span class="tag">
+                                SAFE
+                            </span>
+
+                        </div>
+
+                        <h3>
+                            System Cleaning
+                        </h3>
+
+                        <p>
+                            Remove temporary files, caches and unnecessary
+                            Windows data.
+                        </p>
+
+                        <button
+                            class="secondary-btn"
+                            data-action="cleaning">
+
+                            RUN CLEANING
+
+                        </button>
+
+                    </div>
+
+                    <div class="optimization-card">
+
+                        <div class="card-top">
+
+                            <div class="card-icon">
+                                ◉
+                            </div>
+
+                            <span class="tag">
+                                NETWORK
+                            </span>
+
+                        </div>
+
+                        <h3>
+                            Network Optimization
+                        </h3>
+
+                        <p>
+                            Refresh DNS and optimize Windows network settings.
+                        </p>
+
+                        <button
+                            class="secondary-btn"
+                            data-action="network">
+
+                            OPTIMIZE NETWORK
+
+                        </button>
+
+                    </div>
+
+                    <div class="optimization-card">
+
+                        <div class="card-top">
+
+                            <div class="card-icon">
+                                ⚡
+                            </div>
+
+                            <span class="tag">
+                                GAMING
+                            </span>
+
+                        </div>
+
+                        <h3>
+                            Gaming Performance
+                        </h3>
+
+                        <p>
+                            Apply safe performance settings for gaming.
+                        </p>
+
+                        <button
+                            class="secondary-btn"
+                            data-action="gaming">
+
+                            BOOST GAMING
+
+                        </button>
+
+                    </div>
+
+                    <div class="optimization-card">
+
+                        <div class="card-top">
+
+                            <div class="card-icon">
+                                ↗
+                            </div>
+
+                            <span class="tag">
+                                WINDOWS
+                            </span>
+
+                        </div>
+
+                        <h3>
+                            Startup Optimizer
+                        </h3>
+
+                        <p>
+                            Reduce unnecessary applications and startup tasks.
+                        </p>
+
+                        <button
+                            class="secondary-btn"
+                            data-action="startup">
+
+                            OPTIMIZE STARTUP
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- CLEANING -->
+
+            <div
+                class="page"
+                id="page-cleaning">
+
+                <div class="page-heading">
+
+                    <h2>
+                        System Cleaning
+                    </h2>
+
+                    <p>
+                        Clean unnecessary files from your Windows system.
+                    </p>
+
+                </div>
+
+                <div class="large-card">
+
+                    <div class="large-icon">
+                        ✦
+                    </div>
+
+                    <h3>
+                        Deep System Cleaning
+                    </h3>
+
+                    <p>
+                        Temporary files, Windows caches, thumbnails,
+                        recycle bin and other safe-to-remove data.
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        data-action="cleaning">
+
+                        START CLEANING
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- NETWORK -->
+
+            <div
+                class="page"
+                id="page-network">
+
+                <div class="page-heading">
+
+                    <h2>
+                        Network
+                    </h2>
+
+                    <p>
+                        Improve network stability and refresh Windows networking.
+                    </p>
+
+                </div>
+
+                <div class="large-card">
+
+                    <div class="large-icon">
+                        ◉
+                    </div>
+
+                    <h3>
+                        Network Optimization
+                    </h3>
+
+                    <p>
+                        DNS flush, Winsock reset, IP reset and network
+                        configuration optimization.
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        data-action="network">
+
+                        OPTIMIZE NETWORK
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- GAMING -->
+
+            <div
+                class="page"
+                id="page-gaming">
+
+                <div class="page-heading">
+
+                    <h2>
+                        Gaming
+                    </h2>
+
+                    <p>
+                        Performance-oriented Windows settings for gaming.
+                    </p>
+
+                </div>
+
+                <div class="large-card">
+
+                    <div class="large-icon">
+                        ⚡
+                    </div>
+
+                    <h3>
+                        Gaming Boost
+                    </h3>
+
+                    <p>
+                        Optimize supported Windows performance settings
+                        for gaming workloads.
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        data-action="gaming">
+
+                        ENABLE GAMING MODE
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- STARTUP -->
+
+            <div
+                class="page"
+                id="page-startup">
+
+                <div class="page-heading">
+
+                    <h2>
+                        Startup
+                    </h2>
+
+                    <p>
+                        Manage unnecessary Windows startup tasks.
+                    </p>
+
+                </div>
+
+                <div class="large-card">
+
+                    <div class="large-icon">
+                        ↗
+                    </div>
+
+                    <h3>
+                        Startup Optimizer
+                    </h3>
+
+                    <p>
+                        Disable selected non-essential background tasks
+                        and reduce startup overhead.
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        data-action="startup">
+
+                        OPTIMIZE STARTUP
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- PERFORMANCE -->
+
+            <div
+                class="page"
+                id="page-performance">
+
+                <div class="page-heading">
+
+                    <h2>
+                        Performance
+                    </h2>
+
+                    <p>
+                        System performance configuration.
+                    </p>
+
+                </div>
+
+                <div class="large-card">
+
+                    <div class="large-icon">
+                        ⚡
+                    </div>
+
+                    <h3>
+                        Maximum Performance
+                    </h3>
+
+                    <p>
+                        Apply the supported power and visual-performance
+                        settings.
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        data-action="performance">
+
+                        APPLY PERFORMANCE MODE
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- PRIVACY -->
+
+            <div
+                class="page"
+                id="page-privacy">
+
+                <div class="page-heading">
+
+                    <h2>
+                        Privacy
+                    </h2>
+
+                    <p>
+                        Privacy-related Windows configuration.
+                    </p>
+
+                </div>
+
+                <div class="large-card">
+
+                    <div class="large-icon">
+                        ◉
+                    </div>
+
+                    <h3>
+                        Privacy Center
+                    </h3>
+
+                    <p>
+                        Privacy controls will be available here.
+                    </p>
+
+                    <button
+                        class="secondary-btn"
+                        disabled>
+
+                        COMING SOON
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- LICENSE -->
+
+            <div
+                class="page"
+                id="page-license">
+
+                <div class="page-heading">
+
+                    <h2>
+                        License
+                    </h2>
+
+                    <p>
+                        Activate and manage your OptiForge license.
+                    </p>
+
+                </div>
+
+                <div
+                    class="license-card"
+                    id="active-license-card">
+
+                    <div>
+
+                        <div class="license-label">
+                            CURRENT PLAN
+                        </div>
+
+                        <div
+                            class="license-tier"
+                            id="license-tier">
+
+                            NONE
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="license-active"
+                        id="license-active">
+
+                        <span class="status-dot"></span>
+
+                        INACTIVE
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="large-card"
+                    style="margin-top:18px; max-width:700px;">
+
+                    <div class="large-icon">
+                        ◆
+                    </div>
+
+                    <h3>
+                        Activate License
+                    </h3>
+
+                    <p>
+                        Enter your OptiForge license key to activate this
+                        device and unlock your purchased optimizations.
+                    </p>
+
+                    <div
+                        style="
+                            display:flex;
+                            gap:10px;
+                            width:100%;
+                            margin-top:18px;
+                        ">
+
+                        <input
+                            type="text"
+                            id="license-key-input"
+                            placeholder="OF-XXXX-XXXX-XXXX-XXXX"
+                            autocomplete="off"
+                            spellcheck="false"
+                            style="
+                                flex:1;
+                                min-width:0;
+                                padding:12px 14px;
+                                border-radius:8px;
+                                border:1px solid var(--border-color);
+                                background:var(--page-bg);
+                                color:var(--text-primary);
+                                outline:none;
+                                font-family:Consolas, monospace;
+                                font-size:12px;
+                            ">
+
+                        <button
+                            class="primary-btn"
+                            id="activate-license-button"
+                            style="
+                                min-width:150px;
+                                white-space:nowrap;
+                            ">
+
+                            ACTIVATE
+
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="license-message"
+                        style="
+                            margin-top:12px;
+                            font-size:10px;
+                            min-height:15px;
+                        ">
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="large-card"
+                    style="margin-top:18px; max-width:700px;">
+
+                    <div class="large-icon">
+                        ◉
+                    </div>
+
+                    <h3>
+                        License Binding
+                    </h3>
+
+                    <p>
+                        Your license is bound to this device through a
+                        hardware identifier. One license can only be active
+                        on its assigned device.
+                    </p>
+
+                    <button
+                        class="secondary-btn"
+                        id="refresh-license-button">
+
+                        REFRESH LICENSE
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- ACCOUNT -->
+
+            <div
+                class="page"
+                id="page-account">
+
+                <div class="page-heading">
+
+                    <h2>
+                        Account
+                    </h2>
+
+                    <p>
+                        Your OptiForge account.
+                    </p>
+
+                </div>
+
+                <div class="account-card">
+
+                    <div class="avatar big">
+                        O
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            OptiForge User
+                        </h3>
+
+                        <p>
+                            OptiForge user
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <button
+                    class="danger-btn"
+                    id="logout-button"
+                    style="margin-top:18px;">
+
+                    LOG OUT
+
+                </button>
+
+            </div>
+
+            <!-- SETTINGS -->
+
+            <div
+                class="page"
+                id="page-settings">
+
+                <div class="page-heading">
+
+                    <h2>
+                        Application Settings
+                    </h2>
+
+                    <p>
+                        Customize your OptiForge experience.
+                    </p>
+
+                </div>
+
+                <div class="settings-grid">
+
+                    <div class="settings-card">
+
+                        <div class="settings-card-title">
+                            Appearance
+                        </div>
+
+                        <div class="setting-row">
+
+                            <div>
+
+                                <strong>
+                                    Theme
+                                </strong>
+
+                                <p>
+                                    Choose how OptiForge looks.
+                                </p>
+
+                            </div>
+
+                            <select id="theme-select">
+
+                                <option value="dark">
+                                    Dark
+                                </option>
+
+                                <option value="light">
+                                    Light
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="settings-card">
+
+                        <div class="settings-card-title">
+                            Interface
+                        </div>
+
+                        <div class="setting-row">
+
+                            <div>
+
+                                <strong>
+                                    Animations
+                                </strong>
+
+                                <p>
+                                    Enable interface animations.
+                                </p>
+
+                            </div>
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="animations-toggle"
+                                    checked>
+
+                                <span></span>
+
+                            </label>
+
+                        </div>
+
+                        <div class="setting-row">
+
+                            <div>
+
+                                <strong>
+                                    Notifications
+                                </strong>
+
+                                <p>
+                                    Show optimization notifications.
+                                </p>
+
+                            </div>
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="notifications-toggle"
+                                    checked>
+
+                                <span></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="settings-card">
+
+                        <div class="settings-card-title">
+                            System
+                        </div>
+
+                        <div class="setting-row">
+
+                            <div>
+
+                                <strong>
+                                    Start with Windows
+                                </strong>
+
+                                <p>
+                                    Launch OptiForge automatically with Windows.
+                                </p>
+
+                            </div>
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="startup-toggle">
+
+                                <span></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="settings-card">
+
+                        <div class="settings-card-title">
+                            Reset
+                        </div>
+
+                        <div class="setting-row">
+
+                            <div>
+
+                                <strong>
+                                    Reset Settings
+                                </strong>
+
+                                <p>
+                                    Restore OptiForge settings to default.
+                                </p>
+
+                            </div>
+
+                            <button
+                                class="secondary-btn"
+                                id="reset-settings"
+                                style="
+                                    width:auto;
+                                    min-width:120px;
+                                ">
+
+                                RESET
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button
+                    class="secondary-btn"
+                    id="back-dashboard">
+
+                    ← BACK TO DASHBOARD
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- ACTIVITY LOG -->
+
+        <div class="log-panel">
+
+            <div class="log-header">
+
+                <span>
+                    ACTIVITY LOG
+                </span>
+
+                <span class="log-status">
+
+                    <span class="status-dot"></span>
+
+                    <span id="log-status-text">
+                        READY
+                    </span>
+
+                </span>
+
+            </div>
+
+            <div id="log">
+
+                <div class="log-line">
+
+                    <span class="log-time">
+                        --:--
+                    </span>
+
+                    <span>
+                        OptiForge initialized.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
+```

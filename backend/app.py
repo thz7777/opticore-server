@@ -355,15 +355,6 @@ def register():
         "user": {"id": user_id, "email": email, "username": username}
     }), 201
 
-@app.route("/api/auth/login", methods=["POST"])
-def login():
-    data = request.get_json() or {}
-    identifier = data.get("identifier") # Poate fi email sau username
-    password = data.get("password")
-
-    if not identifier or not password:
-        return jsonify({"error": "Date incomplete"}), 400
-
     db = get_db()
     # Cautam dupa email SAU username
     user = db.execute(

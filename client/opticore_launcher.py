@@ -66,14 +66,24 @@ def api(path, payload=None, method="POST", user_token=None):
     req = urllib.request.Request(url, data=body, headers=headers, method=method)
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
-            return json.loads(resp.read().decode("utf-8")), resp.status
+            response_text = resp.read().decode("utf-8")
+            print(f"[API {method} {path}] Status: {resp.status}")
+            print(f"[API RESPONSE] {response_text[:200]}")
+            return json.loads(response_text), resp.status
     except urllib.error.HTTPError as e:
+        status_code = e.code
         try:
-            return json.loads(e.read().decode("utf-8")), e.code
-        except:
-            return {"error": "Eroare server"}, 0
+            error_body = e.read().decode("utf-8")
+            print(f"[API ERROR {status_code}] {error_body[:200]}")
+            data = json.loads(error_body)
+        except Exception:
+            data = {"error": f"Server error {status_code}"}
+            print(f"[API ERROR {status_code}] Nicio data JSON")
+        return data, status_code
     except Exception as e:
-        return {"error": f"Server indisponibil ({e})"}, 0
+        error_str = str(e)
+        print(f"[API EXCEPTION] {error_str[:200]}")
+        return {"error": f"Connection error: {error_str}"}, 0
 
 def run_cmd(cmd, log_fn=None):
     if platform.system() != "Windows":
@@ -445,28 +455,55 @@ class OptiForgeApp(tk.Tk):
             self.build_login()
     
     def bootstrap(self):
-        data, status = api("/api/account/me", method="GET", user_token=self.user_token)
-        if status == 200:
-            self.username = data["user"]["username"]
-            self.license_info = data.get("license")
-            if self.license_info:
-                threading.Thread(target=self._activate_device_worker, daemon=True).start()
+        try:
+            print(f"[DEBUG] Bootstrap started with token: {self.user_token[:10] if self.user_token else 'None'}...")
+            data, status = api("/api/account/me", method="GET", user_token=self.user_token)
+            print(f"[DEBUG] Account/me response: status={status}, data keys={list(data.keys())}")
+            
+            if status == 200:
+                self.username = data.get("user", {}).get("username", "Unknown")
+                self.license_info = data.get("license")
+                print(f"[DEBUG] Username set: {self.username}, license: {self.license_info is not None}")
+                
+                if self.license_info:
+                    print(f"[DEBUG] License found, starting device activation...")
+                    threading.Thread(target=self._activate_device_worker, daemon=True).start()
+                else:
+                    print(f"[DEBUG] No license, showing prompt...")
+                    self.build_license_prompt()
             else:
-                self.build_license_prompt()
-        else:
-            self.user_token = None
-            save_config({})
+                print(f"[DEBUG] Bootstrap failed with status {status}: {data}")
+                self.user_token = None
+                save_config({})
+                self.build_login()
+        except Exception as e:
+            print(f"[DEBUG] Exception in bootstrap: {e}")
+            import traceback
+            traceback.print_exc()
+            messagebox.showerror("Eroare Bootstrap", f"Eroare: {str(e)}")
             self.build_login()
     
     def _activate_device_worker(self):
-        data, status = api("/api/license/activate-device", 
-                          {"hwid": self.hwid, "device_name": get_device_name()},
-                          user_token=self.user_token)
-        if data.get("valid"):
-            self.license_info = data
-            self.after(0, self.build_main)
-        else:
-            self.after(0, lambda: self.build_license_prompt(data.get("reason", "Eroare")))
+        try:
+            print(f"[DEBUG] Activating device: {get_device_name()}")
+            data, status = api("/api/license/activate-device", 
+                              {"hwid": self.hwid, "device_name": get_device_name()},
+                              user_token=self.user_token)
+            print(f"[DEBUG] Activate response: status={status}, valid={data.get('valid')}")
+            
+            if data.get("valid"):
+                self.license_info = data
+                print(f"[DEBUG] Device activated, building main app...")
+                self.after(0, self.build_main)
+            else:
+                reason = data.get("reason", "Eroare de activare")
+                print(f"[DEBUG] Activation failed: {reason}")
+                self.after(0, lambda r=reason: self.build_license_prompt(r))
+        except Exception as e:
+            print(f"[DEBUG] Exception in activate_device_worker: {e}")
+            import traceback
+            traceback.print_exc()
+            self.after(0, lambda: self.build_license_prompt(f"Eroare: {str(e)}"))
     
     def build_login(self):
         self.clear()
@@ -493,16 +530,25 @@ class OptiForgeApp(tk.Tk):
         password_entry.pack(fill="x", ipady=8, pady=(2, 16))
         
         def do_login():
-            email = email_entry.get()
-            password = password_entry.get()
-            data, status = api("/api/auth/login", {"email": email, "password": password})
-            if status == 200:
-                self.user_token = data["token"]
-                self.username = data["username"]
-                save_config({"user_token": self.user_token})
-                self.bootstrap()
-            else:
-                messagebox.showerror("Eroare", data.get("error", "Eroare login"))
+            try:
+                email = email_entry.get()
+                password = password_entry.get()
+                print(f"[LOGIN] Attempt: {email}")
+                data, status = api("/api/auth/login", {"email": email, "password": password})
+                print(f"[LOGIN] Response: status={status}")
+                
+                if status == 200:
+                    self.user_token = data["token"]
+                    self.username = data["username"]
+                    save_config({"user_token": self.user_token})
+                    self.bootstrap()
+                else:
+                    error = data.get("error", f"Eroare server ({status})")
+                    print(f"[LOGIN] Failed: {error}")
+                    messagebox.showerror("Login Eroare", error)
+            except Exception as e:
+                print(f"[LOGIN] Exception: {e}")
+                messagebox.showerror("Eroare", f"Nu ma pot conecta la server:\n{SERVER_URL}\n\n{str(e)[:100]}")
         
         tk.Button(form, text="AUTENTIFICARE", font=("Segoe UI", 11, "bold"),
                   bg=COLORS["forge"], fg="#1a0e06", relief="flat", cursor="hand2",
@@ -525,29 +571,68 @@ class OptiForgeApp(tk.Tk):
         form = tk.Frame(wrap, bg=COLORS["bg"])
         form.pack(fill="x")
         
-        for label in ["Username", "Email", "Parola"]:
+        username_entry = tk.Entry(form)
+        email_entry = tk.Entry(form)
+        password_entry = tk.Entry(form)
+        
+        for label, entry in [("Username", username_entry), ("Email", email_entry), ("Parola", password_entry)]:
             tk.Label(form, text=label, font=("Segoe UI", 9), fg=COLORS["muted"], bg=COLORS["bg"]).pack(anchor="w")
-            entry = tk.Entry(form, font=("Consolas", 11), bg=COLORS["panel2"], 
-                            fg=COLORS["text"], relief="flat", insertbackground=COLORS["text"])
+            entry.config(font=("Consolas", 11), bg=COLORS["panel2"], fg=COLORS["text"], 
+                        relief="flat", insertbackground=COLORS["text"])
+            if label == "Parola":
+                entry.config(show="*")
             entry.pack(fill="x", ipady=8, pady=(2, 10))
-            if label == "Username":
-                username_entry = entry
-            elif label == "Email":
-                email_entry = entry
-            else:
-                password_entry = entry
+        
+        status_label = tk.Label(form, text="", font=("Consolas", 8), fg=COLORS["danger"], bg=COLORS["bg"])
+        status_label.pack(pady=10)
         
         def do_register():
-            data, status = api("/api/auth/register", 
-                              {"username": username_entry.get(), "email": email_entry.get(), 
-                               "password": password_entry.get()})
-            if status == 201:
-                self.user_token = data["token"]
-                self.username = data["username"]
-                save_config({"user_token": self.user_token})
-                self.bootstrap()
-            else:
-                messagebox.showerror("Eroare", data.get("error", "Eroare register"))
+            try:
+                status_label.config(text="Se inregistreaza...", fg=COLORS["muted"])
+                form.update()
+                
+                username = username_entry.get().strip()
+                email = email_entry.get().strip()
+                password = password_entry.get()
+                
+                if not username or not email or not password:
+                    status_label.config(text="[!] Completeaza toate campurile", fg=COLORS["danger"])
+                    return
+                
+                if len(password) < 8:
+                    status_label.config(text="[!] Parola prea scurta (minim 8)", fg=COLORS["danger"])
+                    return
+                
+                status_label.config(text=f"[*] Se conecteaza la server...", fg=COLORS["muted"])
+                form.update()
+                print(f"[REGISTER] Attempt: {username}, {email}")
+                
+                data, status = api("/api/auth/register", 
+                                  {"username": username, "email": email, "password": password})
+                print(f"[REGISTER] Response: status={status}, keys={list(data.keys())}")
+                
+                if status in (200, 201):
+                    self.user_token = data.get("token")
+                    self.username = data.get("username")
+                    print(f"[REGISTER] Success! Token={self.user_token[:10]}...")
+                    save_config({"user_token": self.user_token})
+                    status_label.config(text="[✓] Inregistrare reusita! Se incarca...", fg=COLORS["spark"])
+                    form.update()
+                    self.after(500, self.bootstrap)
+                else:
+                    error_msg = data.get("error", f"Server error (status {status})")
+                    print(f"[REGISTER] Failed: {error_msg}")
+                    status_label.config(text=f"[✗] {error_msg}", fg=COLORS["danger"])
+            except Exception as e:
+                error_str = str(e)
+                print(f"[REGISTER] Exception: {error_str}")
+                import traceback
+                traceback.print_exc()
+                
+                if "connection" in error_str.lower() or "urlopen" in error_str.lower():
+                    status_label.config(text=f"[✗] Nu pot conecta la:\n{SERVER_URL}\nInternet OK?", fg=COLORS["danger"])
+                else:
+                    status_label.config(text=f"[✗] {error_str[:60]}", fg=COLORS["danger"])
         
         tk.Button(form, text="INREGISTRARE", font=("Segoe UI", 11, "bold"),
                   bg=COLORS["forge"], fg="#1a0e06", relief="flat", cursor="hand2",
